@@ -55,6 +55,34 @@ And /^I am logged into the admin panel$/ do
   end
 end
 
+Given /^there is an article named "(.*)" with content "(.*)"$/ do |name, content|
+  Article.create!({
+    :title => name,
+    :body => content,
+    :guid => "foobar#{Time.now.to_f}"
+    })
+end
+
+And /^I am logged in as a contributor$/ do
+  user = User.create!({:login => 'contributor',
+                :password => 'qwerty',
+                :email => 'edward@snowden.com',
+                :name => 'contributor',
+                :state => 'active'})
+  user.profile.label = 'contributor'
+  user.save!
+  visit '/accounts/login'
+  fill_in 'user_login', :with => 'contributor'
+  fill_in 'user_password', :with => 'qwerty'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+
+end
+
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
