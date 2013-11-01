@@ -630,5 +630,42 @@ describe Article do
     end
 
   end
+
+  describe "merge_article method" do
+    before(:each) do
+      @a1 = Factory.build(:article, :body => "DocA1", :title => "A1 Title", :author => "Andy")
+      @a1.save
+      @a2 = Factory.build(:article, :body => "DocA2", :title => "A2 Title")
+      @a2.save
+      @c1 = Factory.build(:comment, :article => @a1, :body => "comment1")
+      @c1.save
+      @c2 = Factory.build(:comment, :article => @a1, :body => "comment2")
+      @c2.save
+      @c3 = Factory.build(:comment, :article => @a2, :body => "comment3")
+      @c3.save
+    end
+    it "should concatenate the two articles" do
+      @a1.merge_with(@a2.id)
+      @a1.body.should == "DocA1" + "DocA2"
+    end
+    it "should destroy the merged article" do
+      @a1.merge_with(@a2.id)
+      Article.where(:id => @a2.id).count.should == 0
+    end
+    it "should retain the author and title of first article" do
+      author = @a1.author
+      title = @a1.title
+      @a1.merge_with(@a2.id)
+      @a1.title.should == title
+      @a1.author.should == author
+    end
+    it "should merge the existing comments onto the one article" do
+      @a1.comments.count.should == 2
+      Comment.where(:body => "comment3").count.should == 1
+      @a1.merge_with(@a2.id)
+      Comment.where(:body => "comment3").count.should == 1
+      @a1.comments.count.should == 3
+    end
+  end
 end
 

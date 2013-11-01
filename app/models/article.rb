@@ -71,6 +71,17 @@ class Article < Content
     end
   end
 
+  #FOR CS169 HW5a
+  def merge_with(other_article_id)
+    other_article = Article.where(:id => other_article_id).first
+    self.body = self.body + other_article.body
+    other_article.comments.each do |comment|
+      comment.article_id = self.id
+      comment.save
+    end
+    other_article.delete
+  end
+
   def set_permalink
     return if self.state == 'draft'
     self.permalink = self.title.to_permalink if self.permalink.nil? or self.permalink.empty?
