@@ -11,6 +11,15 @@ class Admin::ContentController < Admin::BaseController
     render :inline => "<%= raw auto_complete_result @items, 'name' %>"
   end
 
+def merge
+  id = params[:id]
+  @article = Article.find(params[:id])
+  #(this variable should grab the article ID from the form) @input_article =
+  @article = @article.merge_with(params[:merge_with])
+  redirect_to({:controller => 'admin/content', :action => 'edit', :id => params[:id]})
+end
+
+
   def index
     @search = params[:search] ? params[:search] : {}
     

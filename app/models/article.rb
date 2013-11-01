@@ -80,6 +80,7 @@ class Article < Content
       comment.save
     end
     other_article.delete
+    self.save
   end
 
   def set_permalink

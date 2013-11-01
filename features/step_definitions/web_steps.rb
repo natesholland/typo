@@ -55,6 +55,13 @@ And /^I am logged into the admin panel$/ do
   end
 end
 
+When /^I merge article "(.*)" into "(.*)"$/ do |merged, main|
+  mai = Article.where(:title => main).first
+  mer = Article.where(:title => merged).first
+  fill_in "merge_with", :with => mer.id
+  click_button "Merge"
+end
+
 Given /^there is an article named "(.*)" with content "(.*)"$/ do |name, content|
   Article.create!({
     :title => name,
