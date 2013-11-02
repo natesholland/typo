@@ -12,11 +12,16 @@ class Admin::ContentController < Admin::BaseController
   end
 
 def merge
-  id = params[:id]
-  @article = Article.find(params[:id])
-  #(this variable should grab the article ID from the form) @input_article =
-  @article = @article.merge_with(params[:merge_with])
-  redirect_to({:controller => 'admin/content', :action => 'edit', :id => params[:id]})
+  if current_user.profile.label == 'admin'
+    id = params[:id]
+    @article = Article.find(params[:id])
+    #(this variable should grab the article ID from the form) @input_article =
+    @article = @article.merge_with(params[:merge_with])
+    redirect_to({:controller => 'admin/content', :action => 'edit', :id => params[:id]})
+  else 
+    flash[:error] = _("Error, you are not allowed to perform this action")
+    redirect_to '/admin'
+  end
 end
 
 
