@@ -62,12 +62,14 @@ When /^I merge article "(.*)" into "(.*)"$/ do |merged, main|
   click_button "Merge"
 end
 
-Given /^there is an article named "(.*)" with content "(.*)"$/ do |name, content|
+Given /^there is an article named "(.*)" with content "(.*)" and authored by "(.*)"$/ do |name, content, author|
   Article.create!({
     :title => name,
     :body => content,
+    :author => author,
+    :published => true,
     :guid => "foobar#{Time.now.to_f}"
-    })
+    }).save
 end
 
 And /^I am logged in as a contributor$/ do
@@ -89,7 +91,10 @@ And /^I am logged in as a contributor$/ do
   end
 
 end
-
+When /^I show the page for article "(.*)"$/ do |name|
+  visit '/'
+  click_link(name)
+end
 # Single-line step scoper
 When /^(.*) within (.*[^:])$/ do |step, parent|
   with_scope(parent) { When step }
@@ -102,6 +107,7 @@ end
 
 Given /^(?:|I )am on (.+)$/ do |page_name|
   visit path_to(page_name)
+  save_and_open_page
 end
 
 When /^(?:|I )go to (.+)$/ do |page_name|

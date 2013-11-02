@@ -26,7 +26,6 @@ module NavigationHelpers
     when /^the show page for article "(.*)"$/
       a = Article.where(:title => $1).first
       "/#{a.to_param.join('/')}"
-
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
