@@ -1,0 +1,16 @@
+stages:
+  - test
+
+before_script:
+  - curl -k 'http://wiki.spice.spiceworks.com/@api/deki/files/1279/=spiceworks-CA.crt' > /etc/ssl/certs/sw-dc3.crt
+  - cat /etc/ssl/certs/sw-dc3.crt >> /etc/ssl/certs/ca-certificates.crt
+
+test:ruby-1.9.3:
+  stage: test
+  tags:
+    - docker
+  image: ruby:1.9.3
+  script:
+    - bundle install --jobs $(nproc) --path=/cache/bundler
+    - rake db:create db:migrate
+    - bundle exec rake
