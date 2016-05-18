@@ -13,4 +13,4 @@ test:ruby-1.9.3:
   script:
     - bundle install --jobs $(nproc) --path=/cache/bundler
     - rake db:create db:migrate
-    - bundle exec rake
+    - bundle exec rake spec
