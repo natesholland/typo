@@ -29,7 +29,7 @@ describe 'Given a post which references a pingback enabled article' do
   end
 
   it 'Pingback sent when new article is saved' do
-    skip
+    pending
     ActiveRecord::Base.observers.should include(:email_notifier)
     ActiveRecord::Base.observers.should include(:web_notifier)
 
